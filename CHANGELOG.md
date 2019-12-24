@@ -8,5 +8,6 @@ All notable changes to the "vscode-ocamlformat" extension will be documented in 
 ### Fixed
 - Ensure CWD of ocamlformat child process set as directory of file to be formatted. Fixes spurious 'no project root found' error.
 
-[Unreleased]: https://github.com/Shuumatsu/vscode-ocamlforamat/compare/v0.1.2...HEAD
-[0.1.2]: https://github.com/Shuumatsu/vscode-ocamlforamat/releases/tag/v0.1.2
+[Unreleased]: https://github.com/Shuumatsu/vscode-ocamlformat/compare/v0.1.2...HEAD
+[0.1.2]: https://github.com/Shuumatsu/vscode-ocamlformat/releases/tag/v0.1.2
+[0.1.1]: https://github.com/Shuumatsu/vscode-ocamlformat/releases/tag/v0.1.1
