@@ -3,7 +3,7 @@ import { spawnSync } from 'child_process'
 import commandExists from 'command-exists'
 import path from 'path'
 
-export const command = 'ocamlformat'
+let command = 'ocamlformat'
 
 const getFullRange = (document: vscode.TextDocument) => {
     const firstLine = document.lineAt(0)
@@ -13,13 +13,14 @@ const getFullRange = (document: vscode.TextDocument) => {
 
 const format = (filename: string, text: string) => {
     console.log(filename, text)
-    const config = vscode.workspace.getConfiguration('ocamlformat')
     const args = ['-', `--name=${path.basename(filename)}`]
     return spawnSync(command, args, { input: text, encoding: 'utf8', cwd: path.dirname(filename) })
 }
 
 export function activate(context: vscode.ExtensionContext) {
     console.log('Congratulations, your extension "ocamlformat" is now active!')
+    const config = vscode.workspace.getConfiguration('ocamlformat')
+    command = config.get('path') || command
 
     context.subscriptions.push(
         vscode.commands.registerCommand('extension.ocamlformat', () => {
@@ -46,7 +47,7 @@ export function activate(context: vscode.ExtensionContext) {
         ): vscode.ProviderResult<vscode.TextEdit[]> =>
             new Promise((resolve, reject) => {
                 const text = document.getText()
-                console.log(commandExists.sync(command))
+                console.log('ocamlformat existence: ', commandExists.sync(command))
                 if (!commandExists.sync(command)) return reject(new Error('command not in path'))
                 const { stderr, stdout } = format(document.fileName, text)
                 if (stderr) return reject(stderr)

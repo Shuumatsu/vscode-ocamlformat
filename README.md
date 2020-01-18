@@ -6,9 +6,17 @@ https://github.com/ocaml-ppx/ocamlformat
 
 use `ocamlformat` command or turn on "format on save" to use this ext
 
+## options
+
+```
+{
+    "ocamlformat.path": "path to your ocamlformat binary, defaults to `ocamlformat`"
+}
+```
+
 # TODO
 
-options
+more options
 
 # LICENSE
 

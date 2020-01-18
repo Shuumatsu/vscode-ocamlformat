@@ -14,7 +14,7 @@ const vscode = __importStar(require("vscode"));
 const child_process_1 = require("child_process");
 const command_exists_1 = __importDefault(require("command-exists"));
 const path_1 = __importDefault(require("path"));
-exports.command = 'ocamlformat';
+let command = 'ocamlformat';
 const getFullRange = (document) => {
     const firstLine = document.lineAt(0);
     const lastLine = document.lineAt(document.lineCount - 1);
@@ -22,15 +22,16 @@ const getFullRange = (document) => {
 };
 const format = (filename, text) => {
     console.log(filename, text);
-    const config = vscode.workspace.getConfiguration('ocamlformat');
     const args = ['-', `--name=${path_1.default.basename(filename)}`];
-    return child_process_1.spawnSync(exports.command, args, { input: text, encoding: 'utf8', cwd: path_1.default.dirname(filename) });
+    return child_process_1.spawnSync(command, args, { input: text, encoding: 'utf8', cwd: path_1.default.dirname(filename) });
 };
 function activate(context) {
     console.log('Congratulations, your extension "ocamlformat" is now active!');
+    const config = vscode.workspace.getConfiguration('ocamlformat');
+    command = config.get('path') || command;
     context.subscriptions.push(vscode.commands.registerCommand('extension.ocamlformat', () => {
         const { activeTextEditor } = vscode.window;
-        if (!activeTextEditor || !command_exists_1.default.sync(exports.command))
+        if (!activeTextEditor || !command_exists_1.default.sync(command))
             return;
         const { document } = activeTextEditor;
         const text = document.getText();
@@ -46,8 +47,8 @@ function activate(context) {
     const formatter = {
         provideDocumentFormattingEdits: (document, options) => new Promise((resolve, reject) => {
             const text = document.getText();
-            console.log(command_exists_1.default.sync(exports.command));
-            if (!command_exists_1.default.sync(exports.command))
+            console.log('ocamlformat existence: ', command_exists_1.default.sync(command));
+            if (!command_exists_1.default.sync(command))
                 return reject(new Error('command not in path'));
             const { stderr, stdout } = format(document.fileName, text);
             if (stderr)
